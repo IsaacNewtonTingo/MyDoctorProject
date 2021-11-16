@@ -6,7 +6,6 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 
 // import Navigator from "./Src/navigators/homeStack";
-// import { View } from "react-native";
 
 import WelcomeScreen from "./Src/Screens/WelcomeScreen";
 import SignupScreen from "./Src/Screens/SignupScreen";
@@ -15,6 +14,7 @@ import HomeScreen from "./Src/Screens/HomeScreen";
 import FunctionalityScreen from "./Src/Screens/FunctionalityScreen";
 import SymptomsAPIScreen from "./Src/Screens/SymptomsAPIScreen";
 import Profile from "./Src/Screens/Profile/profile";
+import EditProfile from "./Src/Screens/EditProfileScreen/editProfile";
 
 import DrawerContent from "./Src/Screens/DrawerContent";
 
@@ -25,7 +25,6 @@ import { HeaderTitle } from "react-navigation-stack";
 import { ImageBackground, View, Text } from "react-native";
 import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 import { color } from "react-native-reanimated";
-//import EditProfile from "./Src/Screens/EditProfileScreen/editProfile";
 
 const Drawer = createDrawerNavigator();
 
@@ -98,11 +97,11 @@ const App = () => {
           component={Profile}
           options={{ headerTitle: " Profile" }}
         />
-        {/* <Drawer.Screen
+        <Drawer.Screen
           name="EditProfile"
           component={EditProfile}
           options={{ headerTitle: " Edit Profile" }}
-        /> */}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
 

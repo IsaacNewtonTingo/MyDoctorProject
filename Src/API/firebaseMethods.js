@@ -14,12 +14,15 @@ export async function registration(
     const currentUser = firebase.auth().currentUser;
 
     const db = firebase.firestore();
-    db.collection("users").doc(currentUser.uid).set({
-      email: currentUser.email,
-      firstName: firstName,
-      firstNextOfKin: firstNextOfKin,
-      secondNextOfKin: secondNextOfKin,
-    });
+    db.collection("users")
+      .doc(currentUser.uid)
+      .set({
+        email: currentUser.email,
+        firstName: firstName,
+        firstNextOfKin: firstNextOfKin,
+        secondNextOfKin: secondNextOfKin,
+        createdAt: firestore.Timestamp.fromDate(new Date()),
+      });
   } catch (err) {
     Alert.alert("There is something wrong!!!!", err.message);
   }

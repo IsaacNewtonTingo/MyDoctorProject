@@ -157,7 +157,7 @@ export default function DrawerContent(props) {
             />
           </Drawer.Section>
 
-          <Drawer.Section title="Preferences" style={{ marginTop: 40 }}>
+          {/* <Drawer.Section title="Preferences" style={{ marginTop: 40 }}>
             <TouchableRipple
               onPress={() => {
                 toggleTheme();
@@ -170,7 +170,7 @@ export default function DrawerContent(props) {
                 </View>
               </View>
             </TouchableRipple>
-          </Drawer.Section>
+          </Drawer.Section> */}
         </View>
       </DrawerContentScrollView>
       <Drawer.Section style={styles.bottomDrawerSection}>

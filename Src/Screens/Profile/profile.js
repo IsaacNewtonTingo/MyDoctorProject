@@ -1,20 +1,48 @@
-import React from "react";
-import { View, Image, StyleSheet } from "react-native";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
 import {
-  Avatar,
-  Title,
-  Caption,
-  Paragraph,
-  Drawer,
-  Text,
-  TouchableRipple,
-  Switch,
-} from "react-native-paper";
+  View,
+  Image,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Avatar, Text } from "react-native-paper";
+
+import * as firebase from "firebase";
 
 const Profile = ({ navigation }) => {
+  const [userData, setUserData] = useState(null);
+
+  let currentUserUID = firebase.auth().currentUser.uid;
+  const [firstName, setFirstName] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstNextOfKin, setFirstNextOfKin] = useState("");
+  const [secondNextOfKin, setSecondNextOfKin] = useState("");
+
+  useEffect(() => {
+    async function getUserInfo() {
+      let doc = await firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUserUID)
+        .get();
+
+      if (!doc.exists) {
+        Alert.alert("No user data found!");
+      } else {
+        let dataObj = doc.data();
+        setFirstName(dataObj.firstName);
+        setEmail(dataObj.email);
+        setFirstNextOfKin(dataObj.firstNextOfKin);
+        setSecondNextOfKin(dataObj.secondNextOfKin);
+      }
+    }
+    getUserInfo();
+  });
+
   return (
-    <View style={{ flex: 1, backgroundColor: "black" }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "black" }}>
       <View style={{ marginTop: 20, marginHorizontal: 20 }}>
         <View style={styles.imageContainer}>
           <Avatar.Image
@@ -38,35 +66,35 @@ const Profile = ({ navigation }) => {
         </View>
         <View>
           <View style={styles.items}>
-            <Text style={(styles.text, { color: "gray" })}> Name</Text>
-            <Text style={styles.text}> Chilombo</Text>
+            <Text style={(styles.text, { color: "gray" })}>Name</Text>
+            <Text style={styles.text}> {firstName}</Text>
           </View>
           <View style={styles.items}>
             <Text style={(styles.text, { color: "gray" })}> Email</Text>
-            <Text style={styles.text}> chilombo@gmail.com</Text>
+            <Text style={styles.text}> {email}</Text>
           </View>
           <View style={styles.items}>
             <Text style={(styles.text, { color: "gray" })}>
               Next of Kin (1)
             </Text>
-            <Text style={styles.text}> +254734562435</Text>
+            <Text style={styles.text}> {firstNextOfKin}</Text>
           </View>
           <View style={styles.items}>
             <Text style={(styles.text, { color: "gray" })}>
               Next of Kin (2)
             </Text>
-            <Text style={styles.text}> +254712435678</Text>
+            <Text style={styles.text}> {secondNextOfKin}</Text>
           </View>
 
           <TouchableOpacity
             style={styles.button}
-            // onPress={() => navigation.navigate("EditProfile")}
+            onPress={() => navigation.navigate("EditProfile")}
           >
             <Text style={styles.buttonText}>Make Changes</Text>
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 export default Profile;
