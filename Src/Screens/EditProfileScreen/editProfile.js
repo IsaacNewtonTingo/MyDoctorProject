@@ -6,12 +6,19 @@ import {
   KeyboardAvoidingView,
   Text,
   Alert,
+  Keyboard,
+  ScrollView,
+  Image,
 } from "react-native";
 
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 
+import BottomSheet from "reanimated-bottom-sheet";
+import Animated from "react-native-reanimated";
+
 import * as firebase from "firebase";
 import "firebase/firestore";
+import { auth } from "../../firebase";
 
 import { signIn } from "../../API/firebaseMethods";
 
@@ -28,13 +35,12 @@ const EditProfile = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [firstNextOfKin, setFirstNextOfKin] = useState("");
   const [secondNextOfKin, setSecondNextOfKin] = useState("");
+  const [password, setPassword] = useState("");
 
   const emptyState = () => {
-    // setFirstName("");
-    // setEmail("");
-    // setFirstNextOfKin("");
-    // setSecondNextOfKin("");
+    setEmail("");
     setUserData("");
+    setPassword("");
   };
 
   useEffect(() => {
@@ -50,79 +56,15 @@ const EditProfile = ({ navigation }) => {
       } else {
         let dataObj = doc.data();
         setFirstName(dataObj.firstName);
-        setEmail(dataObj.email);
+        // setEmail(dataObj.email);
         setFirstNextOfKin(dataObj.firstNextOfKin);
         setSecondNextOfKin(dataObj.secondNextOfKin);
       }
     }
     getUserInfo();
   });
-  // const getUser = async () => {
-  //   const currentUser = await firestore()
-  //     .collection("users")
-  //     .doc(currentUserUID)
-  //     .get()
-  //     .then((documentSnapshot) => {
-  //       if (documentSnapshot.exists) {
-  //         console.log("User Data", documentSnapshot.data());
-  //         setUserData(documentSnapshot.data());
-  //       }
-  //     });
-  // };
 
-  // const takePhotoFromCamera = () => {
-  //   ImagePicker.openCamera({
-  //     width: 300,
-  //     height: 400,
-  //     cropping: true,
-  //   }).then((image) => {
-  //     console.log(image);
-  //   });
-  // };
-  // const choosePhotoFromGallery = () => {
-  //   ImagePicker.openPicker({
-  //     width: 300,
-  //     height: 400,
-  //     cropping: true,
-  //   }).then((image) => {
-  //     console.log(image);
-  //   });
-  // };
-
-  // const renderInner = () => (
-  //   <View style={styles.panel}>
-  //     <View style={{ alignItems: "center" }}>
-  //       <Text style={styles.panelTitle}>Upload Photo</Text>
-  //       <Text style={styles.panelSubtitle}>Choose you profile picture</Text>
-  //     </View>
-  //     <TouchableOpacity
-  //       style={styles.panelButton}
-  //       onPress={takePhotoFromCamera}
-  //     >
-  //       <Text style={styles.panelButtonTitle}>Take Photo</Text>
-  //     </TouchableOpacity>
-  //     <TouchableOpacity
-  //       style={styles.panelButton}
-  //       onPress={choosePhotoFromGallery}
-  //     >
-  //       <Text style={styles.panelButtonTitle}>Choose from library</Text>
-  //     </TouchableOpacity>
-  //     <TouchableOpacity
-  //       style={styles.panelButton}
-  //       onPress={() => bs.current.snapTo(1)}
-  //     >
-  //       <Text style={styles.panelButtonTitle}>Cancel</Text>
-  //     </TouchableOpacity>
-  //   </View>
-  // );
-
-  // const renderHeader = () => (
-  //   <View style={styles.header}>
-  //     <View style={styles.panelHeader}>
-  //       <View style={styles.panelHandle}></View>
-  //     </View>
-  //   </View>
-  // );
+  /////////////////////////////////////////////////
 
   const handleUpdate = async () => {
     let doc = await firebase
@@ -132,95 +74,207 @@ const EditProfile = ({ navigation }) => {
       .doc(currentUserUID)
       .update({
         firstName: userData.firstName,
-        email: userData.email,
         firstNextOfKin: userData.firstNextOfKin,
         secondNextOfKin: userData.secondNextOfKin,
       })
       .then(() => {
-        Alert.alert("Reload app to see changes");
         Alert.alert("Profile Updated");
-        console.log("Profile updated");
         navigation.navigate("Profile");
         emptyState();
       });
   };
 
-  return (
-    <View style={{ flex: 1, backgroundColor: "black" }}>
-      <KeyboardAvoidingView
-        behavior="position"
-        keyboardVerticalOffset={keyboardVerticalOffset}
-        style={{ marginTop: 20 }}
+  const bs = React.createRef();
+  const fall = new Animated.Value(1);
+
+  const renderInner = () => (
+    <View style={styles.panel}>
+      <Text style={styles.text}>Enter email you used to sign up</Text>
+      <TextInput
+        placeholder="Email"
+        style={[styles.input, { width: "100%", marginHorizontal: 0 }]}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        onChangeText={(text) => setEmail(text)}
+        value={email}
+      />
+      <Text style={styles.text}>Enter password you used to sign up</Text>
+      <TextInput
+        placeholder="********"
+        style={[styles.input, { width: "100%", marginHorizontal: 0 }]}
+        secureTextEntry={true}
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+      />
+      <TouchableOpacity
+        style={[
+          styles.button,
+          { height: 50, width: "100%", marginHorizontal: 0, marginBottom: 20 },
+        ]}
+        onPress={handleSubmit}
       >
-        <View>
-          <Text style={styles.text}>Current: {firstName}</Text>
-          <TextInput
-            placeholder="Name"
-            style={[{ marginTop: 0 }, styles.input]}
-            onChangeText={(txt) => setUserData({ ...userData, firstName: txt })}
-            value={userData ? userData.firstName : ""}
+        <Text style={styles.buttonText}>Finish</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.panelButton}
+        onPress={() => bs.current.snapTo(1)}
+      >
+        <Text style={styles.panelButtonTitle}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const handleSubmit = () => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        handleUpdate();
+        bs.current.snapTo(1);
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  const handleNext = () => {
+    if (!userData) {
+      Alert.alert("All fields must be filled");
+    } else {
+      bs.current.snapTo(0);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+      onPress={Keyboard.dismiss}
+    >
+      <BottomSheet
+        ref={bs}
+        snapPoints={[330, 0]}
+        renderContent={renderInner}
+        initialSnap={1}
+        callbackNode={fall}
+        enabledGestureInteraction={true}
+        enabledContentTapInteraction={false}
+      />
+
+      <Animated.View
+        style={{
+          opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+          flex: 1,
+        }}
+      >
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../../assets/doc.gif")}
+            style={{ width: 120, height: 150, marginRight: 20 }}
           />
-          <Text style={styles.text}>Current: {email}</Text>
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            onChangeText={(txt) => setUserData({ ...userData, email: txt })}
-            value={userData ? userData.email : ""}
-          />
-          <Text style={styles.text}>Current: {firstNextOfKin}</Text>
-          <TextInput
-            placeholder="Next of Kin (1)"
-            style={styles.input}
-            keyboardType="phone-pad"
-            onChangeText={(txt) =>
-              setUserData({ ...userData, firstNextOfKin: txt })
-            }
-            value={userData ? userData.firstNextOfKin : ""}
-          />
-          <Text style={styles.text}>Current: {secondNextOfKin}</Text>
-          <TextInput
-            placeholder="Next of Kin (2)"
-            style={styles.input}
-            keyboardType="phone-pad"
-            onChangeText={(txt) =>
-              setUserData({ ...userData, secondNextOfKin: txt })
-            }
-            value={userData ? userData.secondNextOfKin : ""}
+        </View>
+        <ScrollView style={{ top: 10 }}>
+          <Text style={styles.text}>Current Name: {firstName}</Text>
+          <View style={styles.miniContainer}>
+            <TextInput
+              placeholder="Name: "
+              style={[{ marginTop: 0 }, styles.input]}
+              onChangeText={(txt) =>
+                setUserData({ ...userData, firstName: txt })
+              }
+              value={userData ? userData.firstName : ""}
+            />
+          </View>
+
+          <Text style={styles.text}>
+            Current first next of Kin No. : {firstNextOfKin}
+          </Text>
+          <View style={styles.miniContainer}>
+            <TextInput
+              placeholder="e.g +254724753175"
+              style={styles.input}
+              keyboardType="phone-pad"
+              onChangeText={(txt) =>
+                setUserData({ ...userData, firstNextOfKin: txt })
+              }
+              value={userData ? userData.firstNextOfKin : ""}
+            />
+          </View>
+
+          <Text style={styles.text}>
+            Current second next of kin No. : {secondNextOfKin}
+          </Text>
+
+          <View style={styles.miniContainer}>
+            <TextInput
+              placeholder="e.g +254721345698"
+              style={styles.input}
+              keyboardType="phone-pad"
+              onChangeText={(txt) =>
+                setUserData({ ...userData, secondNextOfKin: txt })
+              }
+              value={userData ? userData.secondNextOfKin : ""}
+            />
+          </View>
+
+          <View
+            style={{
+              borderBottomColor: "white",
+              borderBottomWidth: 1,
+              marginHorizontal: 50,
+              marginVertical: 20,
+              opacity: 0.2,
+            }}
           />
 
-          <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-            <Text style={styles.buttonText}>Make Changes</Text>
+          <TouchableOpacity style={styles.button} onPress={handleNext}>
+            <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Profile")}
+          >
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+        </ScrollView>
+      </Animated.View>
+    </KeyboardAvoidingView>
   );
 };
 export default EditProfile;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+  },
   imageContainer: {
     alignItems: "center",
   },
 
   text: {
     color: "gray",
-    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
-    marginLeft: 10,
+    marginLeft: 20,
   },
   input: {
     backgroundColor: "white",
     borderRadius: 10,
     height: 50,
-    marginBottom: 30,
+    marginBottom: 20,
     paddingLeft: 20,
+    marginHorizontal: 10,
+    width: "90%",
   },
 
   buttonText: {
@@ -229,7 +283,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    height: 50,
+    height: 40,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#003326",
@@ -245,7 +299,8 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderWidth: 0.5,
     borderColor: "gray",
-    marginBottom: 40,
+    marginBottom: 30,
+    marginHorizontal: 10,
   },
   buttonText: {
     color: "#FFFFFF",
@@ -276,8 +331,11 @@ const styles = StyleSheet.create({
   },
   panel: {
     padding: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#cccccc",
     paddingTop: 20,
+    borderTopRightRadius: 50,
+    borderTopLeftRadius: 50,
+    height: 400,
   },
   panelTitle: {
     fontSize: 25,
@@ -295,11 +353,41 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#FF6347",
     alignItems: "center",
-    marginVertical: 7,
   },
   panelButtonTitle: {
     fontSize: 17,
     fontWeight: "bold",
     color: "white",
+  },
+  button1: {
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#003326",
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowRadius: 15,
+    shadowOpacity: 0.3,
+    elevation: 10,
+    borderWidth: 0.5,
+    borderColor: "gray",
+    marginBottom: 20,
+    marginRight: 10,
+    width: 100,
+  },
+  miniContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageContainer: {
+    alignItems: "center",
+    marginTop: 20,
   },
 });

@@ -9,11 +9,13 @@ import {
   StyleSheet,
   SafeAreaView,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { registration } from "../../API/firebaseMethods";
 import { auth } from "../../firebase";
+import { StatusBar } from "expo-status-bar";
 
 export default function SignupScreen({ navigation }) {
   const [firstName, setFirstName] = useState("");
@@ -22,6 +24,8 @@ export default function SignupScreen({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstNextOfKin, setFirstNextOfKin] = useState("");
   const [secondNextOfKin, setSecondNextOfKin] = useState("");
+
+  const [firebaseSumitting, setFirebaseSubmitting] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -66,10 +70,13 @@ export default function SignupScreen({ navigation }) {
       Alert.alert(" Next of Kin is required");
     } else if (!secondNextOfKin) {
       Alert.alert(" Next of Kin is required");
+    } else if (firstNextOfKin == secondNextOfKin) {
+      Alert.alert("Duplicate next of kin detected \n Use different numbers");
     } else {
       registration(email, password, firstName, firstNextOfKin, secondNextOfKin);
-      navigation.navigate("Home");
+      navigation.navigate("FirstLoading");
       emptyState();
+      Alert.alert("Account succesfully created");
     }
   };
 
@@ -78,95 +85,94 @@ export default function SignupScreen({ navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={{ flex: 1 }}>
-        <ScrollView style={styles.container}>
-          <View onPress={Keyboard.dismiss} style={{ top: 40 }}>
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "bold",
-                textAlign: "center",
-                fontSize: 20,
-              }}
-            >
-              Create Account
-            </Text>
-            <Text style={[{ marginTop: 10 }, styles.text]}>Name</Text>
+      <StatusBar style="light" />
+      <ScrollView
+        onPress={Keyboard.dismiss}
+        style={[{ top: 100 }, styles.container]}
+      >
+        <Text
+          style={{
+            color: "white",
+            fontWeight: "bold",
+            textAlign: "center",
+            fontSize: 20,
+          }}
+        >
+          Create Account
+        </Text>
+        <Text style={[{ marginTop: 10 }, styles.text]}>Name</Text>
 
-            <TextInput
-              style={styles.textInput}
-              placeholder="e.g John"
-              value={firstName}
-              onChangeText={(name) => setFirstName(name)}
-            />
+        <TextInput
+          style={styles.textInput}
+          placeholder="e.g John"
+          value={firstName}
+          onChangeText={(name) => setFirstName(name)}
+        />
 
-            <Text style={styles.text}>Email</Text>
+        <Text style={styles.text}>Email</Text>
 
-            <TextInput
-              style={styles.textInput}
-              placeholder="e.g johndoe@gmail.com"
-              value={email}
-              onChangeText={(email) => setEmail(email)}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+        <TextInput
+          style={styles.textInput}
+          placeholder="e.g johndoe@gmail.com"
+          value={email}
+          onChangeText={(email) => setEmail(email)}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-            <Text style={styles.text}>Next of Kin(1)</Text>
+        <Text style={styles.text}>Next of Kin contact (1)</Text>
 
-            <TextInput
-              style={styles.textInput}
-              placeholder="e.g+254724753175"
-              keyboardType="phone-pad"
-              value={firstNextOfKin}
-              onChangeText={(firstNextOfKin) =>
-                setFirstNextOfKin(firstNextOfKin)
-              }
-            />
+        <TextInput
+          style={styles.textInput}
+          placeholder="e.g+254724753175"
+          keyboardType="phone-pad"
+          value={firstNextOfKin}
+          onChangeText={(firstNextOfKin) => setFirstNextOfKin(firstNextOfKin)}
+        />
 
-            <Text style={styles.text}>Next of Kin(2)</Text>
+        <Text style={styles.text}>Next of Kin contact (2)</Text>
 
-            <TextInput
-              style={styles.textInput}
-              placeholder="e.g +2547181818124"
-              keyboardType="phone-pad"
-              value={secondNextOfKin}
-              onChangeText={(secondNextOfKin) =>
-                setSecondNextOfKin(secondNextOfKin)
-              }
-            />
+        <TextInput
+          style={styles.textInput}
+          placeholder="e.g +2547181818124"
+          keyboardType="phone-pad"
+          value={secondNextOfKin}
+          onChangeText={(secondNextOfKin) =>
+            setSecondNextOfKin(secondNextOfKin)
+          }
+        />
 
-            <Text style={styles.text}>Password</Text>
+        <Text style={styles.text}>Password</Text>
 
-            <TextInput
-              style={styles.textInput}
-              placeholder="********"
-              value={password}
-              onChangeText={(password) => setPassword(password)}
-              secureTextEntry={true}
-            />
+        <TextInput
+          style={styles.textInput}
+          placeholder="********"
+          value={password}
+          onChangeText={(password) => setPassword(password)}
+          secureTextEntry={true}
+        />
 
-            <Text style={styles.text}>Confirm Password</Text>
+        <Text style={styles.text}>Confirm Password</Text>
 
-            <TextInput
-              style={styles.textInput}
-              placeholder="********"
-              value={confirmPassword}
-              onChangeText={(password2) => setConfirmPassword(password2)}
-              secureTextEntry={true}
-            />
-            <TouchableOpacity style={styles.button} onPress={handlePress}>
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
+        <TextInput
+          style={styles.textInput}
+          placeholder="********"
+          value={confirmPassword}
+          onChangeText={(password2) => setConfirmPassword(password2)}
+          secureTextEntry={true}
+        />
 
-            <View style={styles.signupContainer}>
-              <Text style={styles.accountText}>Don't have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text style={styles.signupText}>Login</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      </View>
+        <TouchableOpacity style={styles.button} onPress={handlePress}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+
+        <View style={styles.signupContainer}>
+          <Text style={styles.accountText}>Don't have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.signupText}>Login</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }

@@ -17,7 +17,7 @@ const WelcomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.Container}>
-      <ScrollView style={{ top: 80, flex: 1 }}>
+      <ScrollView style={{ marginTop: 100, flex: 1 }}>
         <View style={styles.imageContainer}>
           <Image
             style={styles.welcomeImage}

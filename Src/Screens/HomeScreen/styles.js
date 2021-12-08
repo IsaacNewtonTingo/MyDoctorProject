@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   homePageContainer: {
-    // backgroundColor: "black",
+    backgroundColor: "black",
     flex: 1,
   },
   helloContainer: {

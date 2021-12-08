@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import {
   Avatar,
@@ -25,25 +25,19 @@ import { loggingOut } from "../API/firebaseMethods";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function DrawerContent(props) {
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-
-  const toggleTheme = () => {
-    setIsDarkTheme(!isDarkTheme);
-  };
-
-  onPress = async () => {
-    const status = await SMS.sendSMSAsync(
-      "0725678456",
-      "Hi. I'm in distress. Please send help"
-      // {
-      //   attachments: {
-      //     uri: 'path/myfile.png',
-      //     mimeType: 'image/png',
-      //     filename: 'myfile.png',
-      //   },
-      // }
-    );
-  };
+  // onPress = async () => {
+  //   const status = await SMS.sendSMSAsync(
+  //     ["0725678456", "0724459192"],
+  //     "Hi. I'm in distress. Please send help"
+  //     // {
+  //     //   attachments: {
+  //     //     uri: 'path/myfile.png',
+  //     //     mimeType: 'image/png',
+  //     //     filename: 'myfile.png',
+  //     //   },
+  //     // }
+  //   );
+  // };
 
   const handleLogout = () => {
     loggingOut();
@@ -67,13 +61,13 @@ export default function DrawerContent(props) {
                   marginTop: 40,
                 }}
               >
-                <Avatar.Image
-                  source={require("../assets/chilombo.jpeg")}
-                  size={70}
+                <Image
+                  source={require("../assets/doc.gif")}
+                  style={{ width: 60, height: 80, marginRight: 20 }}
                 />
                 <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                  <Title style={styles.title}>View Profile</Title>
-                  {/* <Caption style={styles.caption}>View Profile</Caption> */}
+                  <Title style={styles.title}>My Doctor</Title>
+                  <Caption style={styles.caption}>View Profile</Caption>
                 </View>
               </View>
               {/* <View style={styles.row}>
@@ -112,7 +106,7 @@ export default function DrawerContent(props) {
               )}
               label="Search Symptoms"
               onPress={() => {
-                props.navigation.navigate("SymptomsAPI");
+                props.navigation.navigate("SymptomSearch");
               }}
             />
             <DrawerItem
@@ -139,13 +133,13 @@ export default function DrawerContent(props) {
                 );
               }}
             />
-            <DrawerItem
+            {/* <DrawerItem
               icon={({ color, size }) => (
                 <Ionicons name="md-people-sharp" color={color} size={size} />
               )}
               label="Contact Kin"
-              onPress={() => onPress(firstNextOfKin)}
-            />
+              onPress={onPress}
+            /> */}
             <DrawerItem
               icon={({ color, size }) => (
                 <MaterialIcons name="settings-cell" color={color} size={size} />
@@ -157,20 +151,37 @@ export default function DrawerContent(props) {
             />
           </Drawer.Section>
 
-          {/* <Drawer.Section title="Preferences" style={{ marginTop: 40 }}>
-            <TouchableRipple
-              onPress={() => {
-                toggleTheme();
-              }}
-            >
-              <View style={styles.preference}>
-                <Text>Dark Theme</Text>
-                <View pointerEvents="box-only">
-                  <Switch value={isDarkTheme} />
-                </View>
-              </View>
-            </TouchableRipple>
-          </Drawer.Section> */}
+          <Drawer.Section style={{ marginTop: 10 }}>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="bookshelf"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="RECORDS/ NOTES"
+              onPress={() => props.navigation.navigate("Records")}
+            />
+          </Drawer.Section>
+
+          <Drawer.Section style={{ marginTop: 10 }}>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <MaterialIcons
+                  name="report-problem"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Report a problem"
+              onPress={() =>
+                Linking.openURL(
+                  "mailto:ape30technologies@gmail.com?subject=PROBLEM REPORT&body="
+                )
+              }
+            />
+          </Drawer.Section>
         </View>
       </DrawerContentScrollView>
       <Drawer.Section style={styles.bottomDrawerSection}>

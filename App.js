@@ -3,10 +3,6 @@ import * as React from "react";
 
 import { StatusBar } from "expo-status-bar";
 
-import { Ionicons } from "@expo/vector-icons";
-
-// import Navigator from "./Src/navigators/homeStack";
-
 import WelcomeScreen from "./Src/Screens/WelcomeScreen";
 import SignupScreen from "./Src/Screens/SignupScreen";
 import LoginScreen from "./Src/Screens/LoginScreen";
@@ -15,16 +11,22 @@ import FunctionalityScreen from "./Src/Screens/FunctionalityScreen";
 import SymptomsAPIScreen from "./Src/Screens/SymptomsAPIScreen";
 import Profile from "./Src/Screens/Profile/profile";
 import EditProfile from "./Src/Screens/EditProfileScreen/editProfile";
+import YearSelection from "./Src/Screens/YearSelectionScreen/yearSelection";
+import SymptomSearch from "./Src/Screens/SymptomsSearchScreen/symptomSearch";
 
 import DrawerContent from "./Src/Screens/DrawerContent";
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { HeaderTitle } from "react-navigation-stack";
-import { ImageBackground, View, Text } from "react-native";
-import { isEnabled } from "react-native/Libraries/Performance/Systrace";
-import { color } from "react-native-reanimated";
+import Diseases from "./Src/Screens/DiseasesScreen/diseases";
+import Records from "./Src/Screens/RecordsScreen/records";
+
+import { LogBox } from "react-native";
+import FinishEdit from "./Src/Screens/EditProfileScreen/finish";
+import SocialLogin from "./Src/Screens/SocialLoginScreen/socialLogin";
+import FirstLoading from "./Src/Screens/FirstLoadingScreen/FirstLoading";
+
+LogBox.ignoreLogs(["AsyncStorage", "Setting a timer"]);
 
 const Drawer = createDrawerNavigator();
 
@@ -102,13 +104,57 @@ const App = () => {
           component={EditProfile}
           options={{ headerTitle: " Edit Profile" }}
         />
+
+        <Drawer.Screen
+          name="YearSelection"
+          component={YearSelection}
+          options={{ headerTitle: " " }}
+        />
+
+        <Drawer.Screen
+          name="SymptomSearch"
+          component={SymptomSearch}
+          options={{ headerTitle: " Search for symtoms" }}
+        />
+        <Drawer.Screen
+          name="Diseases"
+          component={Diseases}
+          options={{ headerTitle: " Conditions" }}
+        />
+        <Drawer.Screen
+          name="Records"
+          component={Records}
+          options={{ headerTitle: " Records" }}
+        />
+        <Drawer.Screen
+          name="FinishEdit"
+          component={FinishEdit}
+          options={{ headerTitle: " Finish" }}
+        />
+
+        <Drawer.Screen
+          name="SocialLogin"
+          component={SocialLogin}
+          options={{
+            headerTitle: "Create Account",
+            swipeEnabled: false,
+            headerShown: false,
+            hidden: true,
+          }}
+        />
+
+        <Drawer.Screen
+          name="FirstLoading"
+          component={FirstLoading}
+          options={{
+            headerTitle: "",
+            swipeEnabled: false,
+            headerShown: false,
+            hidden: true,
+          }}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
-
-    // <View style={{ flex: 1, backgroundColor: "#d9d9d9" }}>
-    //   <StatusBar />
-    //   <Navigator />
-    // </View>
   );
 };
 export default App;

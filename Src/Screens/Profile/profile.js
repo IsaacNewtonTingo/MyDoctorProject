@@ -19,6 +19,7 @@ const Profile = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [firstNextOfKin, setFirstNextOfKin] = useState("");
   const [secondNextOfKin, setSecondNextOfKin] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getUserInfo() {
@@ -38,31 +39,18 @@ const Profile = ({ navigation }) => {
         setSecondNextOfKin(dataObj.secondNextOfKin);
       }
     }
+    navigation.addListener("focus", () => setLoading(!loading));
     getUserInfo();
-  });
+  }, [navigation, loading]);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "black" }}>
-      <View style={{ marginTop: 20, marginHorizontal: 20 }}>
+    <View style={{ flex: 1, backgroundColor: "black" }}>
+      <View style={{ marginTop: 40, marginHorizontal: 20 }}>
         <View style={styles.imageContainer}>
-          <Avatar.Image
-            source={require("../../assets/chilombo.jpeg")}
-            size={150}
+          <Image
+            source={require("../../assets/doc.gif")}
+            style={{ width: 120, height: 150, marginRight: 20 }}
           />
-
-          <Text
-            style={[
-              styles.text,
-              {
-                color: "#cc5200",
-                textAlign: "center",
-                marginTop: 10,
-                letterSpacing: 4,
-              },
-            ]}
-          >
-            Profile Picture
-          </Text>
         </View>
         <View>
           <View style={styles.items}>
@@ -71,7 +59,7 @@ const Profile = ({ navigation }) => {
           </View>
           <View style={styles.items}>
             <Text style={(styles.text, { color: "gray" })}> Email</Text>
-            <Text style={styles.text}> {email}</Text>
+            <Text style={styles.text}> </Text>
           </View>
           <View style={styles.items}>
             <Text style={(styles.text, { color: "gray" })}>
@@ -94,7 +82,7 @@ const Profile = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 export default Profile;
