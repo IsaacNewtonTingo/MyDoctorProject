@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   hello: {
-    // fontFamily: "sans-serif-medium",
     fontWeight: "700",
     fontSize: 24,
     color: "#ff6600",

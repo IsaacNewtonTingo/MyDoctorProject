@@ -76,7 +76,7 @@ export default function SignupScreen({ navigation }) {
       registration(email, password, firstName, firstNextOfKin, secondNextOfKin);
       navigation.navigate("FirstLoading");
       emptyState();
-      Alert.alert("Account succesfully created");
+      // Alert.alert("Account succesfully created");
     }
   };
 
@@ -88,7 +88,7 @@ export default function SignupScreen({ navigation }) {
       <StatusBar style="light" />
       <ScrollView
         onPress={Keyboard.dismiss}
-        style={[{ top: 100 }, styles.container]}
+        style={[{ top: 50 }, styles.container]}
       >
         <Text
           style={{

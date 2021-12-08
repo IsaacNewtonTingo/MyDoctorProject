@@ -39,43 +39,42 @@ const EditProfile = ({ navigation }) => {
 
   const emptyState = () => {
     setEmail("");
-    setUserData("");
+    setFirstName("");
+    setFirstNextOfKin("");
+    setSecondNextOfKin("");
     setPassword("");
   };
 
-  useEffect(() => {
-    async function getUserInfo() {
-      let doc = await firebase
-        .firestore()
-        .collection("users")
-        .doc(currentUserUID)
-        .get();
+  // useEffect(() => {
+  //   async function getUserInfo() {
+  //     let doc = await firebase
+  //       .firestore()
+  //       .collection("users")
+  //       .doc(currentUserUID)
+  //       .get();
 
-      if (!doc.exists) {
-        Alert.alert("No user data found!");
-      } else {
-        let dataObj = doc.data();
-        setFirstName(dataObj.firstName);
-        // setEmail(dataObj.email);
-        setFirstNextOfKin(dataObj.firstNextOfKin);
-        setSecondNextOfKin(dataObj.secondNextOfKin);
-      }
-    }
-    getUserInfo();
-  });
-
-  /////////////////////////////////////////////////
+  //     if (!doc.exists) {
+  //       Alert.alert("No user data found!");
+  //     } else {
+  //       let dataObj = doc.data();
+  //       setFirstName(dataObj.firstName);
+  //       // setEmail(dataObj.email);
+  //       setFirstNextOfKin(dataObj.firstNextOfKin);
+  //       setSecondNextOfKin(dataObj.secondNextOfKin);
+  //     }
+  //   }
+  //   getUserInfo();
+  // });
 
   const handleUpdate = async () => {
-    let doc = await firebase
-
+    firebase
       .firestore()
       .collection("users")
       .doc(currentUserUID)
-      .update({
-        firstName: userData.firstName,
-        firstNextOfKin: userData.firstNextOfKin,
-        secondNextOfKin: userData.secondNextOfKin,
+      .set({
+        firstName: firstName,
+        firstNextOfKin: firstNextOfKin,
+        secondNextOfKin: secondNextOfKin,
       })
       .then(() => {
         Alert.alert("Profile Updated");
@@ -146,8 +145,14 @@ const EditProfile = ({ navigation }) => {
   };
 
   const handleNext = () => {
-    if (!userData) {
-      Alert.alert("All fields must be filled");
+    if (!firstName && !firstNextOfKin && !secondNextOfKin) {
+      Alert.alert("All fields must be filled.  ");
+    } else if (!firstName) {
+      Alert.alert("All fields must be filled. ");
+    } else if (!firstNextOfKin) {
+      Alert.alert("All fields must be filled. ");
+    } else if (!secondNextOfKin) {
+      Alert.alert("All fields must be filled. ");
     } else {
       bs.current.snapTo(0);
     }
@@ -175,76 +180,68 @@ const EditProfile = ({ navigation }) => {
           flex: 1,
         }}
       >
-        <View style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/doc.gif")}
-            style={{ width: 120, height: 150, marginRight: 20 }}
-          />
-        </View>
-        <ScrollView style={{ top: 10 }}>
-          <Text style={styles.text}>Current Name: {firstName}</Text>
-          <View style={styles.miniContainer}>
-            <TextInput
-              placeholder="Name: "
-              style={[{ marginTop: 0 }, styles.input]}
-              onChangeText={(txt) =>
-                setUserData({ ...userData, firstName: txt })
-              }
-              value={userData ? userData.firstName : ""}
+        <ScrollView>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../../assets/doc.gif")}
+              style={{ width: 120, height: 150, marginRight: 20 }}
             />
           </View>
+          <View style={{ top: 10 }}>
+            <View style={styles.miniContainer}>
+              <TextInput
+                placeholder="Name: e.g Jane "
+                style={[{ marginTop: 0 }, styles.input]}
+                value={firstName}
+                onChangeText={(name) => setFirstName(name)}
+              />
+            </View>
 
-          <Text style={styles.text}>
-            Current first next of Kin No. : {firstNextOfKin}
-          </Text>
-          <View style={styles.miniContainer}>
-            <TextInput
-              placeholder="e.g +254724753175"
-              style={styles.input}
-              keyboardType="phone-pad"
-              onChangeText={(txt) =>
-                setUserData({ ...userData, firstNextOfKin: txt })
-              }
-              value={userData ? userData.firstNextOfKin : ""}
+            <View style={styles.miniContainer}>
+              <TextInput
+                placeholder="Next of Kin (1) No. :e.g +254724753175"
+                style={styles.input}
+                keyboardType="phone-pad"
+                value={firstNextOfKin}
+                onChangeText={(firstNextOfKin) =>
+                  setFirstNextOfKin(firstNextOfKin)
+                }
+              />
+            </View>
+
+            <View style={styles.miniContainer}>
+              <TextInput
+                placeholder="Next of Kin (2) No. :e.g +254721345698"
+                style={styles.input}
+                keyboardType="phone-pad"
+                value={secondNextOfKin}
+                onChangeText={(secondNextOfKin) =>
+                  setSecondNextOfKin(secondNextOfKin)
+                }
+              />
+            </View>
+
+            <View
+              style={{
+                borderBottomColor: "white",
+                borderBottomWidth: 1,
+                marginHorizontal: 50,
+                marginVertical: 20,
+                opacity: 0.2,
+              }}
             />
+
+            <TouchableOpacity style={styles.button} onPress={handleNext}>
+              <Text style={styles.buttonText}>Next</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Profile")}
+            >
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
-
-          <Text style={styles.text}>
-            Current second next of kin No. : {secondNextOfKin}
-          </Text>
-
-          <View style={styles.miniContainer}>
-            <TextInput
-              placeholder="e.g +254721345698"
-              style={styles.input}
-              keyboardType="phone-pad"
-              onChangeText={(txt) =>
-                setUserData({ ...userData, secondNextOfKin: txt })
-              }
-              value={userData ? userData.secondNextOfKin : ""}
-            />
-          </View>
-
-          <View
-            style={{
-              borderBottomColor: "white",
-              borderBottomWidth: 1,
-              marginHorizontal: 50,
-              marginVertical: 20,
-              opacity: 0.2,
-            }}
-          />
-
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Profile")}
-          >
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
         </ScrollView>
       </Animated.View>
     </KeyboardAvoidingView>

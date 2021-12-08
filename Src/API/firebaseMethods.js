@@ -29,17 +29,16 @@ export async function registration(
   }
 }
 
-// export function hospitalRecords(hospitalName, county, hospitalDate, firstName) {
+// export function profileUpdate(firstName, firstNextOfKin, secondNextOfKin) {
 //   try {
 //     await firebase.auth();
 //     const currentUser = firebase.auth().currentUser;
 
 //     const db = firebase.firestore();
-//     db.collection("Hospitals Visited").doc(currentUser.uid).set({
-//       Name: firstName,
-//       "Hospital Name": hospitalName,
-//       "Date visited": hospitalDate,
-//       County: county,
+//     db.collection(" users").doc(currentUser.uid).set({
+//       firstName: firstName,
+//       firstNextOfKin: firstNextOfKin,
+//       secondNextOfKin: secondNextOfKin,
 //     });
 //   } catch (err) {
 //     console.log(err.message);

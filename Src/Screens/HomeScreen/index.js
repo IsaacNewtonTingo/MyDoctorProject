@@ -72,7 +72,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.homePageContainer}>
+    <View style={styles.homePageContainer}>
       <View style={styles.helloContainer}>
         <Text style={styles.hello}>Hello {firstName}</Text>
         <Text style={styles.help}>How may I help you?</Text>
@@ -146,7 +146,7 @@ const HomeScreen = ({ navigation }) => {
           Get to know more on the fuctionality of this application
         </Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
