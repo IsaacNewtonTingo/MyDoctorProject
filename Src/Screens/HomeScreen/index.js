@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
   onPress = async () => {
     const { result } = await SMS.sendSMSAsync(
       [firstNextOfKin, secondNextOfKin],
-      "Hi. I'm in distress. Please send help"
+      "Hi. Hope you're doing great. I'm not feeling okay and I need some help. Please call me as soon as possible."
       // {
       //   attachments: {
       //     uri: "path/myfile.png",

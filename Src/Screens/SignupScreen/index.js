@@ -67,11 +67,15 @@ export default function SignupScreen({ navigation }) {
     } else if (password !== confirmPassword) {
       Alert.alert("Password does not match!");
     } else if (!firstNextOfKin) {
-      Alert.alert(" Next of Kin is required");
+      Alert.alert(" Next of Kin contact is required");
     } else if (!secondNextOfKin) {
-      Alert.alert(" Next of Kin is required");
+      Alert.alert(" Next of Kin contact is required");
+    } else if (firstNextOfKin.length != 13) {
+      Alert.alert("Invalid contact format. Confirm ");
+    } else if (secondNextOfKin.length != 13) {
+      Alert.alert("Invalid contact format. Confirm ");
     } else if (firstNextOfKin == secondNextOfKin) {
-      Alert.alert("Duplicate next of kin detected \n Use different numbers");
+      Alert.alert("Use different numbers for next of kin");
     } else {
       registration(email, password, firstName, firstNextOfKin, secondNextOfKin);
       navigation.navigate("FirstLoading");

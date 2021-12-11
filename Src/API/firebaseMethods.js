@@ -22,7 +22,7 @@ export async function registration(
       firstName: firstName,
       firstNextOfKin: firstNextOfKin,
       secondNextOfKin: secondNextOfKin,
-      // "Created at": firebase.firestore().FieldValue.serverTimestamp(),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   } catch (err) {
     Alert.alert("There is something wrong!!!!", err.message);
@@ -45,31 +45,53 @@ export async function registration(
 //   }
 // }
 
-// export function ambulanceRecords(
-//   registrationNumber,
-//   ambulanceName,
-//   ambulanceDate
-// ) {
-//   try {
-//     const currentUser = firebase.auth().currentUser;
-//     firebase
-//       .firestore()
-//       .collection("users")
-//       .doc(currentUser.uid)
-//       .collection("Ambulance")
-//       .add({
-//         "Ambulance service name": ambulanceName,
-//         "Vehicle registration number": registrationNumber,
-//         "Date used": ambulanceDate,
-//       });
-//     // .then((snapshot) => {
-//     //   hospitalName.id = snapshot.id;
-//     //   snapshot.set(hospitalName);
-//     // });
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// }
+export function hospitalRecords(
+  hospitalName,
+  county,
+  hospitalDate,
+  currentUserUID
+) {
+  try {
+    const currentUser = firebase.auth().currentUser;
+    firebase.firestore().collection("Hospitals_Visited").add({
+      Hospital_Name: hospitalName,
+      Date_Visited: hospitalDate,
+      County: county,
+      User: currentUserUID,
+    });
+    // .then((snapshot) => {
+    //   hospitalName.id = snapshot.id;
+    //   snapshot.set(hospitalName);
+    // });
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+export function ambulanceRecords(
+  registrationNumber,
+  ambulanceName,
+  ambulanceDate,
+  currentUserUID,
+  county
+) {
+  try {
+    const currentUser = firebase.auth().currentUser;
+    firebase.firestore().collection("Ambulance_Services_Used").add({
+      Ambulance_Service_Name: ambulanceName,
+      Date_Used: ambulanceDate,
+      County: county,
+      User: currentUserUID,
+      Vehicle_registration_Number: registrationNumber,
+    });
+    // .then((snapshot) => {
+    //   hospitalName.id = snapshot.id;
+    //   snapshot.set(hospitalName);
+    // });
+  } catch (err) {
+    console.log(err.message);
+  }
+}
 
 export async function signIn(email, password) {
   try {

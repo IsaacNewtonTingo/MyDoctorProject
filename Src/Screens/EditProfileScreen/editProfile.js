@@ -153,6 +153,10 @@ const EditProfile = ({ navigation }) => {
       Alert.alert("All fields must be filled. ");
     } else if (!secondNextOfKin) {
       Alert.alert("All fields must be filled. ");
+    } else if (firstNextOfKin.length != 13) {
+      Alert.alert("Invalid contact format. Confirm ");
+    } else if (secondNextOfKin.length != 13) {
+      Alert.alert("Invalid contact format. Confirm ");
     } else {
       bs.current.snapTo(0);
     }

@@ -25,6 +25,7 @@ import { LogBox } from "react-native";
 import FinishEdit from "./Src/Screens/EditProfileScreen/finish";
 import SocialLogin from "./Src/Screens/SocialLoginScreen/socialLogin";
 import FirstLoading from "./Src/Screens/FirstLoadingScreen/FirstLoading";
+import ReportProblem from "./Src/Screens/ReportProblemScreen/reportProblem";
 
 LogBox.ignoreLogs(["AsyncStorage", "Setting a timer"]);
 
@@ -152,6 +153,12 @@ const App = () => {
             headerShown: false,
             hidden: true,
           }}
+        />
+
+        <Drawer.Screen
+          name="ReportProblem"
+          component={ReportProblem}
+          options={{ headerTitle: " Report Problem / Contact Us" }}
         />
       </Drawer.Navigator>
     </NavigationContainer>

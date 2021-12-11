@@ -360,7 +360,8 @@ export default function SymptomSearch() {
         "Urinary tract infections. These occur when bacteria enter your body through the urethra and multiply in your bladder,Kidney injury.",
       disease2:
         "Kidney infections (pyelonephritis),A bladder or kidney stone,Enlarged prostate,Kidney disease,Cancer,Inherited disorders",
-      treament: " hfhfhsj",
+      treament:
+        " It is adviced to visit a doctor for proper exmining to identify the exact cause and prescribe relevant medication",
       key: "urinating blood",
     },
     {
@@ -699,6 +700,13 @@ export default function SymptomSearch() {
       treament:
         " Antibiotic medications,Medications that block acid production and promote healing,Antacids that neutralize stomach acid",
       key: "burning pain in your middle or upper stomach between meals or at night,Nausea or vomiting,",
+    },
+    {
+      disease1: "Vaginal cancer",
+      disease2: "",
+      treament:
+        "radiotherapy and chemotharapy done after correct analysis of the condition so you need to visit a physician in case you have such signs and symptoms",
+      key: "bleeding after menopause, bleeding after sex,smelly or bloody vaginal discharge,pelvic pain,an itch or lump in your vagina",
     },
   ]);
 

@@ -25,20 +25,6 @@ import { loggingOut } from "../API/firebaseMethods";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function DrawerContent(props) {
-  // onPress = async () => {
-  //   const status = await SMS.sendSMSAsync(
-  //     ["0725678456", "0724459192"],
-  //     "Hi. I'm in distress. Please send help"
-  //     // {
-  //     //   attachments: {
-  //     //     uri: 'path/myfile.png',
-  //     //     mimeType: 'image/png',
-  //     //     filename: 'myfile.png',
-  //     //   },
-  //     // }
-  //   );
-  // };
-
   const handleLogout = () => {
     loggingOut();
     props.navigation.navigate("Welcome");
@@ -160,7 +146,7 @@ export default function DrawerContent(props) {
                   size={size}
                 />
               )}
-              label="RECORDS/ NOTES"
+              label="RECORDS"
               onPress={() => props.navigation.navigate("Records")}
             />
           </Drawer.Section>
@@ -174,12 +160,8 @@ export default function DrawerContent(props) {
                   size={size}
                 />
               )}
-              label="Report a problem"
-              onPress={() =>
-                Linking.openURL(
-                  "mailto:ape30technologies@gmail.com?subject=PROBLEM REPORT&body="
-                )
-              }
+              label="Contact Us"
+              onPress={() => props.navigation.navigate("ReportProblem")}
             />
           </Drawer.Section>
         </View>
